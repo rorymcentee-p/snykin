@@ -35,14 +35,27 @@ jobs:
     - name: Checkmarx CxFlow Action
       uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.1
       with:
-        project: ${{ github.repository }}-PR
+        project: Snykin
         team: /CxServer
         checkmarx_url: ${{ secrets.CHECKMARX_URL }}   # To be stored in GitHub Secrets.
         checkmarx_username: ${{ secrets.CHECKMARX_USER }}  # To be stored in GitHub Secrets.
         checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}  # To be stored in GitHub Secrets.
         checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }}  # To be stored in GitHub Secrets.
         incremental: false
-        break_build: false
+        break_build: true
         scanners: sast
         bug_tracker: GITHUBPULL
         params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.head_ref }} --merge-id=${{ github.event.number }}
+    - name: Checkmarx CxFlow Action
+      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.1 # GitHub Action version
+      with:
+        project: rorymcentee-p/snykin  # <-- Insert Checkmarx CxSCA Project Name
+        sca_api_url: https://api.scacheckmarx.com
+        sca_app_url: https://sca.scacheckmarx.com
+        sca_access_control_url: https://platform.checkmarx.net
+        sca_tenant: protego  # <-- Insert Checkmarx CxSCA Tenant
+        sca_username: ${{ secrets.CHECKMARX_SCA_USERNAME }} # To be stored in GitHub Secrets.
+        sca_password: ${{ secrets.CHECKMARX_SCA_PASSWORD }} # To be stored in GitHub Secrets.
+        break_build: true
+        scanners: sca
+        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.head_ref }} --repo-url="<GitHubRepoUrl>" --merge-id=${{ github.event.number }}
