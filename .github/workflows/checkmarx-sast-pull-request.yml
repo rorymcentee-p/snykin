@@ -51,7 +51,7 @@ jobs:
         checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }}  # To be stored in GitHub Secrets.
         github_token: ${{secrets.GH_TOKEN}}  # To be stored in GitHub Secrets.
         incremental: false
-        break_build: true
+        break_build: false
         scanners: sast
         bug_tracker: NONE
         params: --checkmarx.scan-preset=High and Medium --cxflow.enabled-vulnerability-scanners=sast --checkmarx.incremental=false --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }}  --branch=${{ github.ref }} --merge-id=${{ github.event.number }}
