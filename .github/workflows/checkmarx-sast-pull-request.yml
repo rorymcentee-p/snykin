@@ -33,7 +33,7 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - name: Checkmarx CxFlow Action
+    - name: Checkmarx SAST CxFlow Action
       uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.1
       with:
         project: Snykin
@@ -43,11 +43,24 @@ jobs:
         checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}  # To be stored in GitHub Secrets.
         checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }}  # To be stored in GitHub Secrets.
         github_token: ${{secrets.GH_TOKEN}}  # To be stored in GitHub Secrets.
-        incremental: false
+        incremental: true
         break_build: true
         scanners: sast
         bug_tracker: NONE
-        params: --checkmarx.scan-preset=High and Medium --cxflow.enabled-vulnerability-scanners=sast --cxflow.enabled-vulnerability-scanners=sca --sca.appUrl=https://sca.scacheckmarx.com --sca.apiUrl=https://api.scacheckmarx.com --sca.accessControlUrl=https://platform.checkmarx.net --sca.tenant=${{ secrets.SCA_TENANT }} --sca.username=${{ secrets.SCA_USERNAME }} --sca.password=${{ secrets.SCA_PASSWORD }} --checkmarx.incremental=false --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }}  --branch=${{ github.ref }} --merge-id=${{ github.event.number }}
+        params: --checkmarx.scan-preset=High and Medium --cxflow.enabled-vulnerability-scanners=sast --checkmarx.incremental=false --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }}  --branch=${{ github.ref }} --merge-id=${{ github.event.number }}
+    - name: Checkmarx SCA CxFlow Action
+      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.1 # GitHub Action version
+      with:
+        project: rorymcentee-p/snykin  # <-- Insert Checkmarx CxSCA Project Name
+        sca_api_url: https://api.scacheckmarx.com
+        sca_app_url: https://sca.scacheckmarx.com
+        sca_access_control_url: https://platform.checkmarx.net
+        sca_tenant: protego  # <-- Insert Checkmarx CxSCA Tenant
+        sca_username: ${{ secrets.CHECKMARX_SCA_USERNAME }} # To be stored in GitHub Secrets.
+        sca_password: ${{ secrets.CHECKMARX_SCA_PASSWORD }} # To be stored in GitHub Secrets.
+        break_build: true
+        scanners: sca
+        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --repo-url="<GitHubRepoUrl>"
     # Scan code with KICS
     - name: run kics Scan
       uses: checkmarx/kics-action@v1.1
@@ -56,7 +69,7 @@ jobs:
           output_path: 'results.json'
           verbose: true
     - name: display kics results
-      run: | 
+      run: |
         cat results.json
     - name: Display Counters
       run: |
