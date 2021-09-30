@@ -11,7 +11,7 @@
 #
 # For full documentation,including a list of all inputs, please refer to the README https://github.com/checkmarx-ts/checkmarx-cxflow-github-action
 
-name: CxFlow-GitHub-Pull-Request
+name: CxFlow-GitHub-SAST-Pull-Request
 
 # Controls when the action will run. Triggers the workflow on push or pull request events but only for the master branch
 on:
@@ -31,12 +31,8 @@ jobs:
       name: Security Testing
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
-        distribution: 'adopt'
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Checkmarx CxFlow Action
       uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.1
       with:
@@ -51,16 +47,3 @@ jobs:
         scanners: sast
         bug_tracker: GITHUBPULL
         params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.head_ref }} --merge-id=${{ github.event.number }} --repo-url="<GitHubRepoUrl>
-    - name: Checkmarx CxFlow Action
-      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.1 # GitHub Action version
-      with:
-        project: rorymcentee-p/snykin  # <-- Insert Checkmarx CxSCA Project Name
-        sca_api_url: https://api.scacheckmarx.com
-        sca_app_url: https://sca.scacheckmarx.com
-        sca_access_control_url: https://platform.checkmarx.net
-        sca_tenant: protego  # <-- Insert Checkmarx CxSCA Tenant
-        sca_username: ${{ secrets.CHECKMARX_SCA_USERNAME }} # To be stored in GitHub Secrets.
-        sca_password: ${{ secrets.CHECKMARX_SCA_PASSWORD }} # To be stored in GitHub Secrets.
-        break_build: true
-        scanners: sca
-        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.head_ref }} --repo-url="<GitHubRepoUrl>" --merge-id=${{ github.event.number }}
