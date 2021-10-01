@@ -50,4 +50,4 @@ jobs:
         sca_password: ${{ secrets.CHECKMARX_SCA_PASSWORD }} # To be stored in GitHub Secrets.
         break_build: true
         scanners: sca
-        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.head_ref }} --repo-url="<GitHubRepoUrl>" --merge-id=${{ github.event.number }}
+        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.head_ref }} --repo-url="<GitHubRepoUrl>" --merge-id=${{ github.event.number }} --cx-flow.break-build=true -- github.block-merge=true --github.error-merge=true --cx-flow.thresholds.high=0 --cx-flow.thresholds.medium=0
